@@ -1,7 +1,11 @@
 <script lang="ts" setup>
-  import { watch, ref, nextTick } from 'vue';
+  import { watch, ref, nextTick, onMounted } from 'vue';
+  import { useRoute, useRouter } from 'vue-router';
 
   const MAX_FONT_SIZE = 1000; // tried and tested:)
+
+  const route = useRoute();
+  const router = useRouter();
 
   type ElementRef = null | HTMLElement;
 
@@ -34,9 +38,15 @@
     () => {
       fontSize.value = MAX_FONT_SIZE;
       recalcualte();
+      router.push({ name: 'home', query: { message: text.value } });
     },
     { immediate: true },
   );
+
+  onMounted(() => {
+    const message = route.query.message;
+    if (message) text.value = String(message);
+  });
 </script>
 
 <template>
